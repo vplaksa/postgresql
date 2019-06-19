@@ -1,0 +1,8 @@
+
+--backup db (password will be asked)
+
+pg_dump --file "D:\\backup\\backup of nsi_test_pub 19 June\\bakup3.backup" --host "192.168.8.149" --port "5432" --username "vplaksa" --verbose --format=c --blobs "nsi_test_pub"
+
+--create and restore
+createdb --host "192.168.8.149" --username "vplaksa" -p 5432 -T template0 nsi_copy_of_test_pub19jun
+pg_restore --host "192.168.8.149" --port "5432" --username "vplaksa" --no-password --dbname "nsi_copy_of_test_pub19jun" --verbose "D:\\backup\\backup of nsi_test_pub 19 June\\bakup2.backup"
