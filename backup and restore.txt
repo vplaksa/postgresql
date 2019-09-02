@@ -1,8 +1,37 @@
 
+--connect psql
+psql -h "localhost" -p 5432 -U "fhirbase" nsi_dev_2008
+psql -h 192.168.8.149 -p 5432 -U "fhirbase" nsi_dev
+
+--commands inside psql
+\l --list of databases
+ALTER DATABASE db RENAME TO newdb;  --rename database
+
 --backup db (password will be asked)
 
 pg_dump --file "D:\\backup\\backup of nsi_test_pub 19 June\\bakup3.backup" --host "192.168.8.149" --port "5432" --username "vplaksa" --verbose --format=c --blobs "nsi_test_pub"
 
 --create and restore
-createdb --host "192.168.8.149" --username "vplaksa" -p 5432 -T template0 nsi_copy_of_test_pub19jun
-pg_restore --host "192.168.8.149" --port "5432" --username "vplaksa" --no-password --dbname "nsi_copy_of_test_pub19jun" --verbose "D:\\backup\\backup of nsi_test_pub 19 June\\bakup2.backup"
+createdb --host "192.168.8.149" --username "fhirbase" -p 5432 -T template0 nsi_dev
+createdb --host "192.168.8.149" --username "fhirbase" -p 5432 -T template0 nsi_N3NSI17-1997
+createdb --host "192.168.8.149" --username "fhirbase" -p 5432 -T template0 nsi_vladimir_07081745
+pg_restore --host "192.168.8.149" --port "5432" --username "fhirbase" --dbname "nsi_dev" --verbose "d:\backup\backup_of_r78_prod_25july\nsi-r78_25_07_19.backup"
+
+
+
+createdb --host "localhost" --username "postgres" -p 5432 -T template0 nsi_dev_2008
+createdb --host "192.168.8.149" --username "fhirbase" -p 5432 -T template0 nsi_pgu_lo
+pg_restore --host "192.168.8.149" --port "5432" --username "fhirbase" --dbname "nsi_test" --verbose "d:\backup\backup_of_r78_prod_25july\nsi-r78_25_07_19.backup"
+pg_restore --host "localhost" --port "5432" --username "postgres" --dbname "nsi_dev_2008" --verbose "d:\backup\backup_of_r78_prod_25july\nsi-r78_25_07_19.backup"
+
+--drop database
+UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'mydb';
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'mydb';
+DROP DATABASE mydb;
+
+
+p --host "192.168.8.149" --username "fhirbase"
+
+CREATE USER fhirbase WITH encrypted password 'vlFh2GYtQmYcsRKOIyxS';
+
+ALTER USER myuser WITH SUPERUSER;

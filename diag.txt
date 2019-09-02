@@ -1,0 +1,22 @@
+--useful postgresql queries
+
+--https://gist.github.com/rgreenjr/3637525
+-- kill running query
+SELECT pg_cancel_backend(procpid);
+
+-- kill idle query
+SELECT pg_terminate_backend(procpid);
+
+SELECT pid, age(clock_timestamp(), query_start), usename, query 
+FROM pg_stat_activity 
+WHERE query != '<IDLE>' AND query NOT ILIKE '%pg_stat_activity%' 
+ORDER BY query_start desc;
+
+
+select * from pg_user;
+
+
+-- all tables and their size, with/without indexes
+select datname, pg_size_pretty(pg_database_size(datname))
+from pg_database
+order by pg_database_size(datname) desc;
